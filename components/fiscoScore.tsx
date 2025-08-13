@@ -28,6 +28,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
+import { useGenericMethod } from "@/app/api/useGeneric";
+import { createDemography } from "@/app/api/injestion/demography";
 
 export default function FiscoScore() {
   const [customerId, setCustomerId] = useState("");
@@ -38,6 +40,12 @@ export default function FiscoScore() {
   }> | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const clustersData = useGenericMethod({
+    method: "POST",
+    apiMethod: createDemography,
+    errorMessage: "Could not fetch products, please try again",
+  });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -156,9 +164,6 @@ export default function FiscoScore() {
       </Card>
       {fiscoData && (
         <div className="mt-6">
-          {/* <div className="mb-3 text-sm text-gray-600">
-              Results for: <span className="font-medium text-gray-800">{customerId}</span>
-            </div> */}
           <ResponsiveContainer width="100%" height={320}>
             <BarChart data={fiscoData}>
               <CartesianGrid strokeDasharray="3 3" className="opacity-30" />

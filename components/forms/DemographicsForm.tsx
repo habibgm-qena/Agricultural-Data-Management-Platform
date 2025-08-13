@@ -9,6 +9,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Badge } from '@/components/ui/badge';
 import { Users, Plus, Send, CheckCircle, AlertCircle } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { useGenericMethod } from '@/app/api/useGeneric';
+import { createDemography } from '@/app/api/injestion/demography';
 
 interface DemographicData {
   customerId: string;
@@ -55,6 +57,21 @@ export default function DemographicsForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
+  const demographyData = useGenericMethod({
+    method: "POST",
+    apiMethod: createDemography,
+    // errorMessage: "Could not create demographics, please try again",
+    onSuccess: async (data) => {
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        setSubmitStatus('success');
+        setTimeout(() => setSubmitStatus('idle'), 3000);
+    },
+    onError: async (error) => {
+      setSubmitStatus('error');
+      setTimeout(() => setSubmitStatus('idle'), 3000);
+    },
+  });
+
   const addCustomer = () => {
     setCustomers([...customers, { ...initialData, customerId: `CUST-${Date.now()}` }]);
   };
@@ -71,17 +88,8 @@ export default function DemographicsForm() {
 
   const handleSubmit = async () => {
     setIsSubmitting(true);
-    try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      setSubmitStatus('success');
-      setTimeout(() => setSubmitStatus('idle'), 3000);
-    } catch (error) {
-      setSubmitStatus('error');
-      setTimeout(() => setSubmitStatus('idle'), 3000);
-    } finally {
-      setIsSubmitting(false);
-    }
+    await demographyData.handleAction(customers)
+    setIsSubmitting(false);
   };
 
   return (

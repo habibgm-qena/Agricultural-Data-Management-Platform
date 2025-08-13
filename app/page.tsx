@@ -98,13 +98,13 @@ export default function Home() {
               <Brain className="h-4 w-4 mr-2" />
               Psychometric
             </TabsTrigger>
-            <TabsTrigger value="docs" className="data-[state=active]:bg-emerald-500 data-[state=active]:text-white">
-              <Database className="h-4 w-4 mr-2" />
-              API Docs
-            </TabsTrigger>
             <TabsTrigger value="fico" className="data-[state=active]:bg-emerald-500 data-[state=active]:text-white">
               <Gauge className="h-4 w-4 mr-2" />
               FICO
+            </TabsTrigger>
+            <TabsTrigger value="docs" className="data-[state=active]:bg-emerald-500 data-[state=active]:text-white">
+              <Database className="h-4 w-4 mr-2" />
+              API Docs
             </TabsTrigger>
           </TabsList>
 
