@@ -11,44 +11,52 @@ import { Users, Plus, Send, CheckCircle, AlertCircle } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useGenericMethod } from '@/app/api/useGeneric';
 import { createDemography } from '@/app/api/injestion/demography';
+import { z } from 'zod';
 
-interface DemographicData {
-  customerId: string;
-  age: number;
-  gender: string;
-  marital_status: string;
-  education_level: string;
-  household_size: number;
-  household_composition: number;
-  monthly_household_income: number;
-  dependents_education: number;
-  region: string;
-  migration_status: string;
-  employment_status: string;
-  employment_type: string;
-  digital_literacy: string;
-  access_to_extension: string;
-  cooperative_membership: string;
-  proximity_to_markets: number;
-}
+// Zod validation schema
+const DemographicDataSchema = z.object({
+  customerId: z.string().min(1, "Customer ID is required"),
+  age: z.number().min(18, "Age must be at least 18").max(67, "Age must be at most 67"),
+  gender: z.enum(["male", "female"], { required_error: "Gender is required" }),
+  marital_status: z.enum(["single", "married", "divorced", "widowed", "separated"], { required_error: "Marital status is required" }),
+  education_level: z.enum(["no_formal_education", "primary", "secondary", "diploma", "bachelor's", "master's", "phd"], { required_error: "Education level is required" }),
+  household_size: z.number().min(1, "Household size must be at least 1").max(10, "Household size must be at most 10"),
+  household_composition: z.number().min(0, "Household composition must be at least 0"),
+  monthly_household_income: z.number().min(0, "Monthly household income must be at least 0"),
+  dependents_education: z.number().min(0, "Dependents in education must be at least 0").max(5, "Dependents in education must be at most 5"),
+  region: z.enum(["oromia", "addis_ababa", "amhara", "tigray", "sidama", "snnp"], { required_error: "Region is required" }),
+  migration_status: z.enum(["idp", "refugee", "non-migrant"], { required_error: "Migration status is required" }),
+  employment_status: z.enum(["employed", "self-employed", "unemployed", "student", "retired"], { required_error: "Employment status is required" }),
+  employment_type: z.enum(["agriculture", "government", "private_sector", "informal"], { required_error: "Employment type is required" }),
+  digital_literacy: z.enum(["none", "basic_mobile", "smartphone_user", "advanced"], { required_error: "Digital literacy is required" }),
+  access_to_extension: z.enum(["regular", "irregular", "none"], { required_error: "Access to extension is required" }),
+  cooperative_membership: z.enum(["member", "non-member"], { required_error: "Cooperative membership is required" }),
+  proximity_to_markets: z.number().min(1, "Proximity to markets must be at least 1").max(30, "Proximity to markets must be at most 30"),
+});
+
+const DemographicsSubmissionSchema = z.object({
+  demographics: z.array(DemographicDataSchema).min(1, "At least one demographic record is required"),
+});
+
+type DemographicData = z.infer<typeof DemographicDataSchema>;
 
 const initialData: DemographicData = {
   customerId: '',
   age: 18,
-  gender: '',
-  marital_status: '',
-  education_level: '',
+  gender: 'male',
+  marital_status: 'single',
+  education_level: 'no_formal_education',
   household_size: 1,
   household_composition: 0,
   monthly_household_income: 0,
   dependents_education: 0,
-  region: '',
-  migration_status: '',
-  employment_status: '',
-  employment_type: '',
-  digital_literacy: '',
-  access_to_extension: '',
-  cooperative_membership: '',
+  region: 'oromia',
+  migration_status: 'non-migrant',
+  employment_status: 'employed',
+  employment_type: 'agriculture',
+  digital_literacy: 'none',
+  access_to_extension: 'none',
+  cooperative_membership: 'non-member',
   proximity_to_markets: 1,
 };
 
@@ -56,6 +64,7 @@ export default function DemographicsForm() {
   const [customers, setCustomers] = useState<DemographicData[]>([{ ...initialData }]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [validationErrors, setValidationErrors] = useState<string[]>([]);
 
   const demographyData = useGenericMethod({
     method: "POST",
@@ -88,8 +97,39 @@ export default function DemographicsForm() {
 
   const handleSubmit = async () => {
     setIsSubmitting(true);
-    await demographyData.handleAction(customers)
-    setIsSubmitting(false);
+    setValidationErrors([]);
+    
+    try {
+      // Validate the data using Zod
+      const submissionData = { demographics: customers };
+      const validatedData = DemographicsSubmissionSchema.parse(submissionData);
+      
+      // Submit the validated data
+      await demographyData.handleAction(validatedData);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        const errors = error.errors.map(err => `${err.path.join('.')}: ${err.message}`);
+        setValidationErrors(errors);
+        setSubmitStatus('error');
+        setTimeout(() => setSubmitStatus('idle'), 3000);
+      } else {
+        setSubmitStatus('error');
+        setTimeout(() => setSubmitStatus('idle'), 3000);
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // Check if form is valid for enabling submit button
+  const isFormValid = () => {
+    try {
+      const submissionData = { demographics: customers };
+      DemographicsSubmissionSchema.parse(submissionData);
+      return true;
+    } catch {
+      return false;
+    }
   };
 
   return (
@@ -108,6 +148,19 @@ export default function DemographicsForm() {
         </CardHeader>
       </Card>
 
+      <Card className="bg-blue-50 border-blue-200">
+        <CardContent className="pt-4">
+          <div className="flex items-start space-x-2">
+            <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
+            <div className="text-sm text-blue-700">
+              <p className="font-medium mb-1">Data Format:</p>
+              <p>Data will be submitted in the format: <code className="bg-blue-100 px-1 rounded">{"{ demographics: [...] }"}</code></p>
+              <p className="mt-1">All fields marked with * are required and will be validated before submission.</p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
       {submitStatus !== 'idle' && (
         <Alert className={submitStatus === 'success' ? 'border-green-200 bg-green-50' : 'border-red-200 bg-red-50'}>
           {submitStatus === 'success' ? (
@@ -120,6 +173,22 @@ export default function DemographicsForm() {
               ? 'Demographics data submitted successfully!' 
               : 'Failed to submit data. Please try again.'
             }
+          </AlertDescription>
+        </Alert>
+      )}
+
+      {validationErrors.length > 0 && (
+        <Alert className="border-red-200 bg-red-50">
+          <AlertCircle className="h-4 w-4 text-red-600" />
+          <AlertDescription className="text-red-700">
+            <div className="space-y-1">
+              <p className="font-medium">Validation Errors:</p>
+              <ul className="list-disc list-inside space-y-1">
+                {validationErrors.map((error, index) => (
+                  <li key={index} className="text-sm">{error}</li>
+                ))}
+              </ul>
+            </div>
           </AlertDescription>
         </Alert>
       )}
@@ -397,7 +466,7 @@ export default function DemographicsForm() {
         
         <Button 
           onClick={handleSubmit}
-          disabled={isSubmitting}
+          disabled={isSubmitting || !isFormValid()}
           className="bg-emerald-600 hover:bg-emerald-700 text-white"
         >
           {isSubmitting ? (
