@@ -204,8 +204,8 @@ export default function DemographicsForm() {
                     <SelectItem value="primary">Primary</SelectItem>
                     <SelectItem value="secondary">Secondary</SelectItem>
                     <SelectItem value="diploma">Diploma</SelectItem>
-                    <SelectItem value="bachelor's">Bachelor's</SelectItem>
-                    <SelectItem value="master's">Master's</SelectItem>
+                    <SelectItem value="bachelor's">Bachelor&apos;s</SelectItem>
+                    <SelectItem value="master's">Master&apos;s</SelectItem>
                     <SelectItem value="phd">PhD</SelectItem>
                   </SelectContent>
                 </Select>

@@ -5,14 +5,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Progress } from '@/components/ui/progress';
-import { Users, Database, Leaf, Brain, TrendingUp, MapPin, DollarSign, Activity } from 'lucide-react';
+import { Users, Database, Leaf, Brain, TrendingUp, MapPin, DollarSign, Activity, Gauge } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line, AreaChart, Area } from 'recharts';
 import DemographicsForm from '@/components/forms/DemographicsForm';
 import AssetsForm from '@/components/forms/AssetsForm';
 import AgtechForm from '@/components/forms/AgtechForm';
 import PsychometricForm from '@/components/forms/PsychometricForm';
 import ApiDocumentation from '@/components/ApiDocumentation';
+import FiscoScore from '@/components/fiscoScore';
 
 const demographicsData = [
   { name: 'Oromia', value: 450, percentage: 35 },
@@ -77,7 +77,7 @@ export default function Home() {
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
-          <TabsList className="grid w-full grid-cols-6 bg-white/50 backdrop-blur-sm">
+          <TabsList className="grid w-full grid-cols-7 bg-white/50 backdrop-blur-sm">
             <TabsTrigger value="dashboard" className="data-[state=active]:bg-emerald-500 data-[state=active]:text-white">
               <TrendingUp className="h-4 w-4 mr-2" />
               Dashboard
@@ -101,6 +101,10 @@ export default function Home() {
             <TabsTrigger value="docs" className="data-[state=active]:bg-emerald-500 data-[state=active]:text-white">
               <Database className="h-4 w-4 mr-2" />
               API Docs
+            </TabsTrigger>
+            <TabsTrigger value="fisco" className="data-[state=active]:bg-emerald-500 data-[state=active]:text-white">
+              <Gauge className="h-4 w-4 mr-2" />
+              FISCO
             </TabsTrigger>
           </TabsList>
 
@@ -233,7 +237,12 @@ export default function Home() {
                         <span className="font-medium text-gray-700">{item.category}</span>
                         <span className="text-emerald-600 font-semibold">{item.score}%</span>
                       </div>
-                      <Progress value={item.score} className="h-2" />
+                      <div className="h-2 w-full bg-gray-200 rounded">
+                        <div
+                          className="h-2 bg-emerald-500 rounded"
+                          style={{ width: `${item.score}%` }}
+                        />
+                      </div>
                     </div>
                   ))}
                 </CardContent>
@@ -259,6 +268,10 @@ export default function Home() {
 
           <TabsContent value="docs">
             <ApiDocumentation />
+          </TabsContent>
+
+          <TabsContent value="fisco" className="space-y-6">
+            <FiscoScore />
           </TabsContent>
         </Tabs>
       </main>
