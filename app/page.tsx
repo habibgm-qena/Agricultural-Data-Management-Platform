@@ -75,9 +75,9 @@ export default function Home() {
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-3 pb-8">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
-          <TabsList className="grid w-full grid-cols-7 bg-white/50 backdrop-blur-sm">
+          <TabsList className="sticky top-[4.5rem] z-40 grid w-full grid-cols-7 bg-white/80 backdrop-blur-sm border-b border-emerald-100 shadow-sm">
             <TabsTrigger value="dashboard" className="data-[state=active]:bg-emerald-500 data-[state=active]:text-white">
               <TrendingUp className="h-4 w-4 mr-2" />
               Dashboard
