@@ -259,7 +259,7 @@ export default function PsychometricForm() {
               {assessment.response.length === 0 && (
                 <div className="text-center py-8 text-gray-500">
                   <Brain className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                  <p>No responses added yet. Click "Add Sample Questions" or "Add Response" to get started.</p>
+                  <p>No responses added yet. Click &quot;Add Sample Questions&quot; or &quot;Add Response&quot; to get started.</p>
                 </div>
               )}
 

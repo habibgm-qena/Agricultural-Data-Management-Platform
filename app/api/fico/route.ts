@@ -18,16 +18,16 @@ export async function POST(request: Request) {
 		// const baseScore = (hash % 300) + 50; // 50 - 349
 
 		// const data = [
-		// 	{ score: Math.max(0, Math.min(350, Math.round(baseScore))), name: 'fisco apiculture' },
-		// 	{ score: Math.max(0, Math.min(350, Math.round(baseScore * 0.75))), name: 'fisco livestock' },
-		// 	{ score: Math.max(0, Math.min(350, Math.round(baseScore * 0.55))), name: 'fisco crops' },
+		// 	{ score: Math.max(0, Math.min(350, Math.round(baseScore))), name: 'fico apiculture' },
+		// 	{ score: Math.max(0, Math.min(350, Math.round(baseScore * 0.75))), name: 'fico livestock' },
+		// 	{ score: Math.max(0, Math.min(350, Math.round(baseScore * 0.55))), name: 'fico crops' },
 		// ];
 
 		// return NextResponse.json(data, { status: 200 });
     const data = [
-      { score: 300, name: 'fisco apiculture' },
-      { score: 250, name: 'fisco livestock' },
-      { score: 200, name: 'fisco crops' },
+      { score: 300, name: 'fico apiculture' },
+      { score: 250, name: 'fico livestock' },
+      { score: 200, name: 'fico crops' },
     ]
     return NextResponse.json(data, { status: 200 });
 	} catch (error) {

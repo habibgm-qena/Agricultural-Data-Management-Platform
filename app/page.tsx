@@ -102,9 +102,9 @@ export default function Home() {
               <Database className="h-4 w-4 mr-2" />
               API Docs
             </TabsTrigger>
-            <TabsTrigger value="fisco" className="data-[state=active]:bg-emerald-500 data-[state=active]:text-white">
+            <TabsTrigger value="fico" className="data-[state=active]:bg-emerald-500 data-[state=active]:text-white">
               <Gauge className="h-4 w-4 mr-2" />
-              FISCO
+              FICO
             </TabsTrigger>
           </TabsList>
 
@@ -270,7 +270,7 @@ export default function Home() {
             <ApiDocumentation />
           </TabsContent>
 
-          <TabsContent value="fisco" className="space-y-6">
+          <TabsContent value="fico" className="space-y-6">
             <FiscoScore />
           </TabsContent>
         </Tabs>
