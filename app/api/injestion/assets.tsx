@@ -1,6 +1,6 @@
 import cpClient from "../cpClient";
 
-export const createDemography = (data: any) =>
+export const createAssets = (data: any) =>
     cpClient({
       method: "post",
       url: `/assets/`,
