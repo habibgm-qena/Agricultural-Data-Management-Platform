@@ -1,8 +1,8 @@
-import cpClient from "../cpClient";
+import axios from "axios";
 
 export const createDemography = (data: any) =>
-    cpClient({
+    axios({
       method: "post",
-      url: `/demographics/`,
+      url: `/api/demographics`,
       data
     });

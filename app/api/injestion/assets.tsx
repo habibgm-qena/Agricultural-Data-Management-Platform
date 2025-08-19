@@ -1,8 +1,8 @@
-import cpClient from "../cpClient";
+import axios from "axios";
 
 export const createAssets = (data: any) =>
-    cpClient({
+    axios({
       method: "post",
-      url: `/assets/`,
+      url: `/api/assets`,
       data
     });

@@ -1,8 +1,8 @@
-import cpClient from "../cpClient";
+import axios from "axios";
 
-export const createDemography = (data: any) =>
-    cpClient({
+export const createPsychometric = (data: any) =>
+    axios({
       method: "post",
-      url: `/psychometric_info/`,
+      url: `/api/psychometric_info`,
       data
     });
