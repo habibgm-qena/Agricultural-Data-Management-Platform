@@ -293,7 +293,7 @@ const initialLivestock: InferType<typeof LivestockItemSchema> = {
   Waste_Management: "Yes",
   Mortality_Rate: 0,
   Market_Channels: "Local Market",
-  Land_Area: 0.5,
+  Land_Area: 2,
   Proximity_to_Market: 5,
   Fattening_Duration: 3,
   Price_per_Item: 0,
@@ -394,7 +394,7 @@ const initialAgroProcessing: InferType<typeof AgroProcessingItemSchema> = {
   Specific_Products: ["Product"],
   Number_of_Unique_Products: 1,
   Production_Capacity: 1,
-  Land_Area: 0.5,
+  Land_Area: 2,
   Price_per_Kg_or_Liter: 0,
 };
 
@@ -720,7 +720,7 @@ export default function AgtechSafeForm() {
                               <SelectField label="Market Channels *" value={row.Market_Channels} onChange={(v) => formik.setFieldValue(`${base}.Market_Channels`, v)} onBlur={() => touch(`${base}.Market_Channels`)} options={LivestockModel.Market_Channels} error={errorAt(`${base}.Market_Channels`)} />
                               <div className="space-y-2">
                                 <Label>Land Area (Ha) *</Label>
-                                <Input type="number" step="0.1" value={row.Land_Area} onChange={(e) => formik.setFieldValue(`${base}.Land_Area`, numberChange(e) ?? 0)} onBlur={() => touch(`${base}.Land_Area`)} className="border-green-200 focus:border-green-500" />
+                                <Input type="number" step="1" value={row.Land_Area} onChange={(e) => formik.setFieldValue(`${base}.Land_Area`, numberChange(e) ?? 0)} onBlur={() => touch(`${base}.Land_Area`)} className="border-green-200 focus:border-green-500" />
                                 {errorAt(`${base}.Land_Area`) && <p className="text-sm text-red-600">{errorAt(`${base}.Land_Area`)}</p>}
                               </div>
                               <div className="space-y-2">

@@ -1,21 +1,30 @@
 import { NextRequest, NextResponse } from "next/server";
-import cpClient from "../cpClient";
+import { getAgtechSectors } from "../_agtechSectorsCache";
+
+function randomScore(min = 300, max = 800) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 
 export async function POST(req: NextRequest) {
-	try {
-		const { customerId } = await req.json();
-		if (!customerId || typeof customerId !== "string") {
-			return new NextResponse("Invalid customerId", { status: 400 });
-		}
+  try {
+    const { customerId } = await req.json();
+    if (!customerId || typeof customerId !== "string") {
+      return new NextResponse("Invalid customerId", { status: 400 });
+    }
 
-		// Example backend endpoint. Adjust path if needed
-		const response = await cpClient.post(`/api/v1/fico/score/`, { customerId });
+    const sectors = getAgtechSectors(customerId.trim()) || [];
 
-		// Expecting an array of { name, score } from backend, otherwise map accordingly
-		const data = Array.isArray(response?.data) ? response.data : response?.data?.data ?? [];
-		return NextResponse.json(data, { status: 200 });
-	} catch (err: any) {
-		const message = err?.response?.data?.message || err?.message || "Internal error";
-		return new NextResponse(message, { status: err?.response?.status || 500 });
-	}
+    // If no sectors cached, return a single Overall score
+    if (!sectors.length) {
+      return NextResponse.json([
+        { name: "Overall", score: randomScore() },
+      ]);
+    }
+
+    const data = sectors.map((name) => ({ name, score: randomScore() }));
+    return NextResponse.json(data, { status: 200 });
+  } catch (err: any) {
+    const message = err?.message || "Internal error";
+    return new NextResponse(message, { status: 500 });
+  }
 } 
