@@ -99,8 +99,8 @@ export default function FiscoScore() {
     const clamped = Math.max(min, Math.min(max, value));
     const pct = (clamped - min) / (max - min);
 
-    const startAngle = -120; // degrees
-    const endAngle = 120;
+    const startAngle = -180; // left
+    const endAngle = 0;      // right
     const angle = startAngle + pct * (endAngle - startAngle);
 
     const r = 80;
