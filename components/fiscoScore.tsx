@@ -80,7 +80,7 @@ export default function FiscoScore() {
       });
       if (!res.ok) {
         const text = await res.text();
-        throw new Error(text || "Failed to fetch FICO score");
+        throw new Error(text || "Failed to fetch KIFIYA score");
       }
       const data: Array<{ name: string; score: number }> = await res.json();
       setFiscoData(data);
@@ -165,7 +165,7 @@ export default function FiscoScore() {
           <div className="flex items-center space-x-3">
             <ChartBarIcon className="h-8 w-8" />
             <div>
-              <CardTitle className="text-2xl">FICO Score Lookup</CardTitle>
+              <CardTitle className="text-2xl">KIFIYA Score Lookup</CardTitle>
               <CardDescription className="text-emerald-100">
                 Enter a Customer ID to fetch sector-based dummy scores and insights
               </CardDescription>
@@ -202,7 +202,7 @@ export default function FiscoScore() {
                 ) : (
                   <span className="flex items-center">
                     <Send className="h-4 w-4 mr-2" />
-                    <>Get FICO Score</>
+                    <>Get KIFIYA Score</>
                   </span>
                 )}
               </Button>
