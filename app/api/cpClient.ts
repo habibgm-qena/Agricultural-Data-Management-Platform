@@ -3,10 +3,10 @@ import Axios from "axios";
 const createCpClient = () => {
   const baseURL =
     process.env.REACT_APP_API_BASE_URL ||
-    "http://a551937d589ef4c34871b54a8a65e5be-1186892383.us-east-1.elb.amazonaws.com"; 
+    "https://batchapi-dev.idd.kifiya.dev"; 
 
-  const basicUsername = process.env.REACT_APP_FAST_NAME || 'fast_name';
-  const basicPassword = process.env.REACT_APP_FAST_PASSWORD || 'fast_password';
+  const basicUsername = process.env.REACT_APP_FAST_NAME || 'batchapi_service_user';
+  const basicPassword = process.env.REACT_APP_FAST_PASSWORD || 'G7mQ2rN9xK4pD8tV3cW1hL6fR5uB';
 
   const basicAuthHeader = (() => {
     if (!basicUsername || !basicPassword) {
